@@ -1,5 +1,5 @@
 function handleStyle(s, t, o) {
-  if (s === 1) {
+  if (s === 0) {
     document.getElementById(o.fillBack).classList.remove("barBack");
     document.getElementById(o.slice).classList.remove("sliceBack");
   }
@@ -15,15 +15,37 @@ function handleStyle(s, t, o) {
 
 function resetStyle(t, o, f) {
   var i = 0;
+  document.getElementById(o.reset).style.display = "block";
+
   var j = setInterval(function() {
-    handleStyle(i, t, o);
-    if (i > t) {
+    if (Math.ceil((i * 100) / t) <= 50) {
+      document.getElementById(o.reset).style.backgroundImage =
+        "linear-gradient(90deg, " +
+        o.color +
+        " 50%, transparent 50%), linear-gradient(" +
+        (90 + Math.ceil((i * 360) / t)) +
+        "deg, #424242 50%, " +
+        o.color +
+        " 50%)";
+    } else {
+      document.getElementById(o.reset).style.backgroundImage =
+        "linear-gradient(" +
+        (-270 + Math.ceil((i * 360) / t)) +
+        "deg, #424242 50%, transparent 50%, transparent), linear-gradient(270deg, #424242 50%, " +
+        o.color +
+        " 50%, " +
+        o.color +
+        ")";
+    }
+    if (i >= t) {
       document.getElementById(o.fillBack).classList.remove("barBack");
       document.getElementById(o.slice).classList.remove("sliceBack");
       document.getElementById(o.fill).style.transform = "rotate(0deg)";
+
       clearInterval(j);
+      document.getElementById(o.reset).style.display = "none";
     }
-    i++
+    i = i + 0.8;
   }, f);
 }
 
@@ -38,22 +60,24 @@ function startTime() {
   var sO = {
     fill: "secondsFill",
     fillBack: "secondsFillBack",
-    slice: "secondsSlice"
+    slice: "secondsSlice",
+    reset: "secondsReset",
+    color: "#29b6f6"
   };
   var mO = {
     fill: "minutesFill",
     fillBack: "minutesFillBack",
-    slice: "minutesSlice"
+    slice: "minutesSlice",
+    reset: "minutesReset",
+    color: "#ffca28"
   };
   var hO = {
     fill: "hoursFill",
     fillBack: "hoursFillBack",
-    slice: "hoursSlice"
+    slice: "hoursSlice",
+    reset: "hoursReset",
+    color: "#ef5350"
   };
-
-  handleStyle(s, 60, sO);
-  handleStyle(m, 60, mO);
-  handleStyle(h % 12 ? h % 12 : 0, 12, hO);
 
   if (s === 0) {
     setTimeout(function() {
@@ -64,15 +88,22 @@ function startTime() {
           resetStyle(12, hO, 50);
         }
       }
-    }, 150)
+    }, 100);
+  } else if (s > 0) {
+    handleStyle(s, 60, sO);
+    handleStyle(m, 60, mO);
+    handleStyle(h % 12 ? h % 12 : 0, 12, hO);
   }
 
   document.getElementById("seconds").innerHTML = s < 10 ? "0" + s : s;
   document.getElementById("minutes").innerHTML = m < 10 ? "0" + m : m;
   document.getElementById("hours").innerHTML = h < 10 ? "0" + h : h;
-  document.getElementById("date").innerHTML = day + "/" + (month + 1);
+
+  day = day < 10 ? "0" + day : day;
+  month = month < 10 ? "0" + (month + 1) : month + 1;
+  document.getElementById("date").innerHTML = day + "/" + month;
 
   setTimeout(startTime, 1000);
 }
 
-window.onload = startTime;
+window.onload = startTime();
