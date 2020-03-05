@@ -100,7 +100,7 @@ function startTime() {
   document.getElementById("hours").innerHTML = h < 10 ? "0" + h : h;
 
   day = day < 10 ? "0" + day : day;
-  month = month < 10 ? "0" + (month + 1) : month + 1;
+  month = month + 1 < 10 ? "0" + (month + 1) : month + 1;
   document.getElementById("date").innerHTML = day + "/" + month;
 
   setTimeout(startTime, 1000);
