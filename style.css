@@ -50,12 +50,6 @@ body {
   justify-content: center;
 }
 
-.unit {
-  color: #9e9e99;
-  font-size: 25px;
-  margin-top: -7px;
-}
-
 .slice {
   position: absolute;
 }
